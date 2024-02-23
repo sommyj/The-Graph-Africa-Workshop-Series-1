@@ -7,7 +7,7 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export class Assign extends ethereum.Event {
@@ -222,7 +222,7 @@ export class cryptopunks__punksOfferedForSaleResult {
     value1: BigInt,
     value2: Address,
     value3: BigInt,
-    value4: Address
+    value4: Address,
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -272,7 +272,7 @@ export class cryptopunks__punkBidsResult {
     value0: boolean,
     value1: BigInt,
     value2: Address,
-    value3: BigInt
+    value3: BigInt,
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -330,7 +330,7 @@ export class cryptopunks extends ethereum.SmartContract {
     let result = super.call(
       "punksOfferedForSale",
       "punksOfferedForSale(uint256):(bool,uint256,address,uint256,address)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
+      [ethereum.Value.fromUnsignedBigInt(param0)],
     );
 
     return new cryptopunks__punksOfferedForSaleResult(
@@ -338,17 +338,17 @@ export class cryptopunks extends ethereum.SmartContract {
       result[1].toBigInt(),
       result[2].toAddress(),
       result[3].toBigInt(),
-      result[4].toAddress()
+      result[4].toAddress(),
     );
   }
 
   try_punksOfferedForSale(
-    param0: BigInt
+    param0: BigInt,
   ): ethereum.CallResult<cryptopunks__punksOfferedForSaleResult> {
     let result = super.tryCall(
       "punksOfferedForSale",
       "punksOfferedForSale(uint256):(bool,uint256,address,uint256,address)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
+      [ethereum.Value.fromUnsignedBigInt(param0)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -360,8 +360,8 @@ export class cryptopunks extends ethereum.SmartContract {
         value[1].toBigInt(),
         value[2].toAddress(),
         value[3].toBigInt(),
-        value[4].toAddress()
-      )
+        value[4].toAddress(),
+      ),
     );
   }
 
@@ -414,7 +414,7 @@ export class cryptopunks extends ethereum.SmartContract {
     let result = super.call(
       "nextPunkIndexToAssign",
       "nextPunkIndexToAssign():(uint256)",
-      []
+      [],
     );
 
     return result[0].toBigInt();
@@ -424,7 +424,7 @@ export class cryptopunks extends ethereum.SmartContract {
     let result = super.tryCall(
       "nextPunkIndexToAssign",
       "nextPunkIndexToAssign():(uint256)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -437,7 +437,7 @@ export class cryptopunks extends ethereum.SmartContract {
     let result = super.call(
       "punkIndexToAddress",
       "punkIndexToAddress(uint256):(address)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
+      [ethereum.Value.fromUnsignedBigInt(param0)],
     );
 
     return result[0].toAddress();
@@ -447,7 +447,7 @@ export class cryptopunks extends ethereum.SmartContract {
     let result = super.tryCall(
       "punkIndexToAddress",
       "punkIndexToAddress(uint256):(address)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
+      [ethereum.Value.fromUnsignedBigInt(param0)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -475,24 +475,24 @@ export class cryptopunks extends ethereum.SmartContract {
     let result = super.call(
       "punkBids",
       "punkBids(uint256):(bool,uint256,address,uint256)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
+      [ethereum.Value.fromUnsignedBigInt(param0)],
     );
 
     return new cryptopunks__punkBidsResult(
       result[0].toBoolean(),
       result[1].toBigInt(),
       result[2].toAddress(),
-      result[3].toBigInt()
+      result[3].toBigInt(),
     );
   }
 
   try_punkBids(
-    param0: BigInt
+    param0: BigInt,
   ): ethereum.CallResult<cryptopunks__punkBidsResult> {
     let result = super.tryCall(
       "punkBids",
       "punkBids(uint256):(bool,uint256,address,uint256)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
+      [ethereum.Value.fromUnsignedBigInt(param0)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -503,14 +503,14 @@ export class cryptopunks extends ethereum.SmartContract {
         value[0].toBoolean(),
         value[1].toBigInt(),
         value[2].toAddress(),
-        value[3].toBigInt()
-      )
+        value[3].toBigInt(),
+      ),
     );
   }
 
   balanceOf(param0: Address): BigInt {
     let result = super.call("balanceOf", "balanceOf(address):(uint256)", [
-      ethereum.Value.fromAddress(param0)
+      ethereum.Value.fromAddress(param0),
     ]);
 
     return result[0].toBigInt();
@@ -518,7 +518,7 @@ export class cryptopunks extends ethereum.SmartContract {
 
   try_balanceOf(param0: Address): ethereum.CallResult<BigInt> {
     let result = super.tryCall("balanceOf", "balanceOf(address):(uint256)", [
-      ethereum.Value.fromAddress(param0)
+      ethereum.Value.fromAddress(param0),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -531,7 +531,7 @@ export class cryptopunks extends ethereum.SmartContract {
     let result = super.call(
       "allPunksAssigned",
       "allPunksAssigned():(bool)",
-      []
+      [],
     );
 
     return result[0].toBoolean();
@@ -541,7 +541,7 @@ export class cryptopunks extends ethereum.SmartContract {
     let result = super.tryCall(
       "allPunksAssigned",
       "allPunksAssigned():(bool)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -569,7 +569,7 @@ export class cryptopunks extends ethereum.SmartContract {
     let result = super.call(
       "punksRemainingToAssign",
       "punksRemainingToAssign():(uint256)",
-      []
+      [],
     );
 
     return result[0].toBigInt();
@@ -579,7 +579,7 @@ export class cryptopunks extends ethereum.SmartContract {
     let result = super.tryCall(
       "punksRemainingToAssign",
       "punksRemainingToAssign():(uint256)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -592,7 +592,7 @@ export class cryptopunks extends ethereum.SmartContract {
     let result = super.call(
       "pendingWithdrawals",
       "pendingWithdrawals(address):(uint256)",
-      [ethereum.Value.fromAddress(param0)]
+      [ethereum.Value.fromAddress(param0)],
     );
 
     return result[0].toBigInt();
@@ -602,7 +602,7 @@ export class cryptopunks extends ethereum.SmartContract {
     let result = super.tryCall(
       "pendingWithdrawals",
       "pendingWithdrawals(address):(uint256)",
-      [ethereum.Value.fromAddress(param0)]
+      [ethereum.Value.fromAddress(param0)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();

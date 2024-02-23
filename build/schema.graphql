@@ -30,3 +30,18 @@ type ArtTransfer @entity {
   # The timestamp when the transfer occurred.
   timestamp: BigInt!
 }
+
+type Amount @entity {
+  # Unique identifier for an amount transfer event, typically a combination of block number and log index.
+  id: ID!
+  # The piece of digital art being transferred.
+  artTransfer: ArtTransfer!
+  # Transfer value
+  value: BigInt! # uint256
+  # The collector sending the art.
+  oldOwner: Bytes!
+  # The recipient collector.
+  newOwner: Bytes!
+  # The timestamp when the transfer occurred.
+  timestamp: BigInt!
+}

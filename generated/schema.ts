@@ -8,7 +8,7 @@ import {
   store,
   Bytes,
   BigInt,
-  BigDecimal
+  BigDecimal,
 } from "@graphprotocol/graph-ts";
 
 export class Collector extends Entity {
@@ -23,7 +23,7 @@ export class Collector extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Collector must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type Collector must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("Collector", id.toString(), this);
     }
@@ -63,13 +63,12 @@ export class Collector extends Entity {
     this.set("walletAddress", Value.fromBytes(value));
   }
 
-  get collection(): Array<string> {
-    let value = this.get("collection");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toStringArray();
-    }
+  get collection(): DigitalArtLoader {
+    return new DigitalArtLoader(
+      "Collector",
+      this.get("id")!.toString(),
+      "collection",
+    );
   }
 }
 
@@ -85,7 +84,7 @@ export class DigitalArt extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type DigitalArt must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type DigitalArt must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("DigitalArt", id.toString(), this);
     }
@@ -138,13 +137,12 @@ export class DigitalArt extends Entity {
     this.set("owner", Value.fromString(value));
   }
 
-  get history(): Array<string> {
-    let value = this.get("history");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toStringArray();
-    }
+  get history(): ArtTransferLoader {
+    return new ArtTransferLoader(
+      "DigitalArt",
+      this.get("id")!.toString(),
+      "history",
+    );
   }
 }
 
@@ -160,7 +158,7 @@ export class ArtTransfer extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type ArtTransfer must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type ArtTransfer must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
       store.set("ArtTransfer", id.toString(), this);
     }
@@ -168,7 +166,7 @@ export class ArtTransfer extends Entity {
 
   static loadInBlock(id: string): ArtTransfer | null {
     return changetype<ArtTransfer | null>(
-      store.get_in_block("ArtTransfer", id)
+      store.get_in_block("ArtTransfer", id),
     );
   }
 
@@ -239,5 +237,146 @@ export class ArtTransfer extends Entity {
 
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
+  }
+}
+
+export class Amount extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Amount entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type Amount must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("Amount", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): Amount | null {
+    return changetype<Amount | null>(store.get_in_block("Amount", id));
+  }
+
+  static load(id: string): Amount | null {
+    return changetype<Amount | null>(store.get("Amount", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get artTransfer(): string {
+    let value = this.get("artTransfer");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set artTransfer(value: string) {
+    this.set("artTransfer", Value.fromString(value));
+  }
+
+  get value(): BigInt {
+    let value = this.get("value");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set value(value: BigInt) {
+    this.set("value", Value.fromBigInt(value));
+  }
+
+  get oldOwner(): Bytes {
+    let value = this.get("oldOwner");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set oldOwner(value: Bytes) {
+    this.set("oldOwner", Value.fromBytes(value));
+  }
+
+  get newOwner(): Bytes {
+    let value = this.get("newOwner");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set newOwner(value: Bytes) {
+    this.set("newOwner", Value.fromBytes(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+}
+
+export class DigitalArtLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): DigitalArt[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<DigitalArt[]>(value);
+  }
+}
+
+export class ArtTransferLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): ArtTransfer[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<ArtTransfer[]>(value);
   }
 }

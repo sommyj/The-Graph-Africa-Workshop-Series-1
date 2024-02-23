@@ -2,10 +2,10 @@
 import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 
 // Import the event types that the Graph node will listen to from the smart contract.
-import { Assign, PunkTransfer } from "../generated/Cryptopunks/Cryptopunks";
+import { Assign, PunkTransfer, Transfer } from "../generated/Cryptopunks/Cryptopunks";
 
 // Import the schema definitions that we've defined for our subgraph.
-import { Collector, DigitalArt, ArtTransfer } from "../generated/schema";
+import { Collector, DigitalArt, ArtTransfer, Amount } from "../generated/schema";
 
 // Function to handle 'Assign' events emitted by the contract.
 export function handleAssign(event: Assign): void {
@@ -75,4 +75,26 @@ export function handlePunkTransfer(event: PunkTransfer): void {
   // Update the digital art's owner to the new owner and save the changes.
   digitalArt.owner = newCollector.id;
   digitalArt.save();
+}
+
+// Define a function to handle 'Transfer' events emitted by the Cryptopunks contract.
+export function handleTransfer(event: Transfer): void {
+  // Create a new id by concatinating hash and logindex
+  let transferId = event.transaction.hash.concatI32(event.logIndex.toI32()).toHexString();
+  // event.params.value.toString();
+
+  // Attempt to load an existing Transfer entity by its ID.
+  let transfer = Amount.load(transferId);
+
+  // If the digital art does not exist (which shouldn't happen if 'Assign' events are handled), create it.
+  if (!transfer) {
+    transfer = new Amount(transferId); // Instantiate a new Amount entity.
+  }
+
+  transfer.oldOwner = event.params.from // Record the old owner.
+  transfer.newOwner = event.params.to // Record the new owner.
+  transfer.value = event.params.value // Set its value
+  transfer.timestamp = event.block.timestamp // Record the timestamp of the transfer.
+
+  transfer.save()
 }
